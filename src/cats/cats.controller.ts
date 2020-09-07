@@ -2,21 +2,24 @@
 import { Controller, Get, Post, HttpCode, Param, Body, Query } from '@nestjs/common'
 import { CreateCatDto } from './dot/dto'
 import { CatsService } from './cats.service'
-import { Cat } from './interfaces/cat.interface'
 
 @Controller('cats')
 export class CatsController {
     constructor(private catsService: CatsService) { }
 
-    @Get()
-    async findAll(): Promise<Cat[]> {
+    @Get('findAll')
+    async findAll() {
         return this.catsService.findAll();
     }
 
     @Post('create')
-    create(@Query() query): string {
-        console.log(query,'=====')
-        return `This action adds a ${query.name} cat`
+    async create(@Query() query) {
+        
+        const res = await this.catsService.create(query)
+        console.log(res,'=====')
+        return {
+            msg: 'success'
+        }
     }
 
     @Get('getone')

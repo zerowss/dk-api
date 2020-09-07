@@ -1,25 +1,20 @@
-/*
- * @Author: your name
- * @Date: 2020-09-03 15:04:05
- * @LastEditTime: 2020-09-04 18:14:44
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: /dk-api/src/cats/cats.service.ts
- */
-import { Injectable } from '@nestjs/common';
-import { Cat } from './interfaces/cat.interface';
-import { Connection,Repository } from 'typeorm';
 
+import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Cats } from './cats.entity'
+import { InjectRepository } from '@nestjs/typeorm';
 @Injectable()
 export class CatsService {
-  constructor(private connection: Connection) {}
-  private readonly cats: Cat[] = [];
+  constructor(
+    @InjectRepository(Cats)
+    private catsRepository: Repository<Cats>,
+  ) { }
 
-  create(cat: Cat) {
-    this.cats.push(cat);
+  create(cat: Cats) {
+    this.catsRepository.save(cat);
   }
 
-  findAll(): Cat[] {
-    return this.cats;
+  findAll(): Promise<Cats[]> {
+    return this.catsRepository.find();
   }
 }
